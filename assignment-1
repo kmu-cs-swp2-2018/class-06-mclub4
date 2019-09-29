@@ -1,0 +1,40 @@
+import time
+
+def fibo(n):
+    if n == 0:
+        return 0
+    elif n==1:
+        return 1
+    else :
+        return fibo(n-1) + fibo(n-2)
+
+def iterfibo(n):
+    if n == 0:
+        return 0
+    elif n==1:
+        return 1
+    else :
+        a = 0
+        b = 1
+        c = a + b
+        k = 0
+        while k < n-1 :
+            c = a + b
+            a = b
+            b = c
+            k += 1
+        return c
+
+
+while True:
+    nbr = int(input("수를 입력하시오 : "))
+    if nbr == -1:
+        break
+    ts = time.time()
+    fibonumber = iterfibo(nbr)
+    ts = time.time() - ts
+    print("반복사용 피보나치 : (%d)=%d, time %.6f" %(nbr, fibonumber, ts))
+    ts = time.time()
+    fibonumber = fibo(nbr)
+    ts = time.time() - ts
+    print("재귀사용 피보나치(%d)=%d, time %.6f" %(nbr, fibonumber, ts))
