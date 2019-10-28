@@ -29,6 +29,8 @@ class ScoreDB(QWidget):
         self.AmountEdit = QLineEdit()
         self.AddButton = QPushButton()
         self.Screen = QTextEdit()
+        #self.statusBar = QstatusBar()
+        #self.setStatusBar(self.statusBar)
 
         Add = QPushButton("Add")
         Del = QPushButton("Del")
@@ -92,6 +94,7 @@ class ScoreDB(QWidget):
         if self.NameEdit.text() != "" and self.AgeEdit.text() != "" and self.ScoreEdit.text() != "" and self.isNumber(self.AgeEdit.text()) and self.isNumber(self.ScoreEdit.text()) and int(self.AgeEdit.text())>=0 and int(self.ScoreEdit.text()) >= 0:
             self.scoredb.append(text)
             self.showScoreDB(self.scoredb)
+        #else statusbar message    
 
     def DelClicked(self):
         index = 0
