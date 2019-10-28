@@ -1,0 +1,165 @@
+import pickle
+import sys
+from PyQt5.QtWidgets import (QWidget, QPushButton,
+    QHBoxLayout, QVBoxLayout, QApplication, QLabel,
+    QComboBox, QTextEdit, QLineEdit)
+from PyQt5.QtCore import Qt
+
+
+class ScoreDB(QWidget):
+
+    def __init__(self):
+        super().__init__()
+        self.initUI()
+        self.dbfilename = 'assignment6.dat'
+        self.scoredb = []
+        self.readScoreDB()
+        self.showScoreDB(self.scoredb)
+
+    def initUI(self):
+        Name = QLabel('Name: ')
+        Age = QLabel('Age: ')
+        Score = QLabel('Score: ')
+        Amount = QLabel('Amount: ')
+        Key = QLabel('Key: ')
+        Result = QLabel('Result: ')
+        self.NameEdit = QLineEdit()
+        self.AgeEdit = QLineEdit()
+        self.ScoreEdit = QLineEdit()
+        self.AmountEdit = QLineEdit()
+        self.AddButton = QPushButton()
+        self.Screen = QTextEdit()
+
+        Add = QPushButton("Add")
+        Del = QPushButton("Del")
+        Find = QPushButton("Find")
+        Inc = QPushButton("Inc")
+        Show = QPushButton("Show")
+        Add.clicked.connect(self.AddClicked)
+        Del.clicked.connect(self.DelClicked)
+        Find.clicked.connect(self.FindClicked)
+        Inc.clicked.connect(self.IncClicked)
+        Show.clicked.connect(self.ShowClicked)
+        self.KeyCombo = QComboBox()
+        self.KeyCombo.addItem("Age")
+        self.KeyCombo.addItem("Name")
+        self.KeyCombo.addItem("Score")
+
+        hbox1 = QHBoxLayout()
+        hbox1.addWidget(Name)
+        hbox1.addWidget(self.NameEdit)
+        hbox1.addWidget(Age)
+        hbox1.addWidget(self.AgeEdit)
+        hbox1.addWidget(Score)
+        hbox1.addWidget(self.ScoreEdit)
+
+        hbox2 = QHBoxLayout()
+        hbox2.addStretch(1)
+        hbox2.addWidget(Amount)
+        hbox2.addWidget(self.AmountEdit)
+        hbox2.addWidget(Key)
+        hbox2.addWidget(self.KeyCombo)
+
+        hbox3 = QHBoxLayout()
+        hbox3.addStretch(1)
+        hbox3.addWidget(Add)
+        hbox3.addWidget(Del)
+        hbox3.addWidget(Find)
+        hbox3.addWidget(Inc)
+        hbox3.addWidget(Show)
+
+        vbox = QVBoxLayout()
+        vbox.addLayout(hbox1)
+        vbox.addLayout(hbox2)
+        vbox.addLayout(hbox3)
+        vbox.addWidget(Result)
+        vbox.addWidget(self.Screen)
+
+        self.setLayout(vbox)
+        self.setGeometry(300, 300, 500, 250)
+        self.setWindowTitle('Assignment6')
+        self.show()
+
+    def isNumber(self, s):
+        try:
+            int(s)
+            return True
+        except ValueError:
+            return False
+
+    def AddClicked(self):
+        text = {"Name":self.NameEdit.text(),"Age":self.AgeEdit.text(),"Score":self.ScoreEdit.text()}
+        if self.NameEdit.text() != "" and self.AgeEdit.text() != "" and self.ScoreEdit.text() != "" and self.isNumber(self.AgeEdit.text()) and self.isNumber(self.ScoreEdit.text()) and int(self.AgeEdit.text())>=0 and int(self.ScoreEdit.text()) >= 0:
+            self.scoredb.append(text)
+            self.showScoreDB(self.scoredb)
+
+    def DelClicked(self):
+        index = 0
+        while(len(self.scoredb)>index):
+            if self.scoredb[index]["Name"] == self.NameEdit.text():
+                del self.scoredb[index]
+                index = 1
+            index += 1
+        self.showScoreDB(self.scoredb)
+
+    def FindClicked(self):
+        name = self.NameEdit.text()
+        find = []
+        if(self.NameEdit.text() != ""):
+            for i in self.scoredb:
+                if i["Name"]==name:
+                    find.append(i)
+            self.showScoreDB(find)
+
+    def IncClicked(self):
+        name = self.NameEdit.text()
+        amount = self.AmountEdit.text()
+        if(amount != "" and name != ""):
+            for i in self.scoredb:
+                if i["Name"] == name:
+                    i["Score"] = str(int(i["Score"]) + int(amount))
+            self.showScoreDB(self.scoredb)
+
+    def ShowClicked(self):
+        key = str(self.KeyCombo.currentText())
+        self.scoredb.sort(key=lambda person:person[key])
+        self.showScoreDB(self.scoredb)
+
+    def closeEvent(self, event):
+        self.writeScoreDB()
+
+    def readScoreDB(self):
+        try:
+            fH = open(self.dbfilename, 'rb')
+        except FileNotFoundError as e:
+            self.scoredb = []
+            return
+
+        try:
+            self.scoredb =  pickle.load(fH)
+        except:
+            pass
+        else:
+            pass
+        fH.close()
+
+
+    # write the data into person db
+    def writeScoreDB(self):
+        fH = open(self.dbfilename, 'wb')
+        pickle.dump(self.scoredb, fH)
+        fH.close()
+
+    def showScoreDB(self,db):
+        text = ""
+        for p in db:
+            for attr in p:
+                text += attr + "=" + p[attr] + '\t'
+            text += "\n"
+        self.Screen.setText(text)
+
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    ex = ScoreDB()
+    sys.exit(app.exec_())
