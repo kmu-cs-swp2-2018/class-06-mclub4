@@ -2,7 +2,7 @@ import pickle
 import sys
 from PyQt5.QtWidgets import (QWidget, QPushButton,
     QHBoxLayout, QVBoxLayout, QApplication, QLabel,
-    QComboBox, QTextEdit, QLineEdit)
+    QComboBox, QTextEdit, QLineEdit, QStatusBar)
 from PyQt5.QtCore import Qt
 
 
@@ -29,8 +29,6 @@ class ScoreDB(QWidget):
         self.AmountEdit = QLineEdit()
         self.AddButton = QPushButton()
         self.Screen = QTextEdit()
-        #self.statusBar = QstatusBar()
-        #self.setStatusBar(self.statusBar)
 
         Add = QPushButton("Add")
         Del = QPushButton("Del")
@@ -46,6 +44,7 @@ class ScoreDB(QWidget):
         self.KeyCombo.addItem("Age")
         self.KeyCombo.addItem("Name")
         self.KeyCombo.addItem("Score")
+        self.statusBar = QStatusBar()
 
         hbox1 = QHBoxLayout()
         hbox1.addWidget(Name)
@@ -76,6 +75,7 @@ class ScoreDB(QWidget):
         vbox.addLayout(hbox3)
         vbox.addWidget(Result)
         vbox.addWidget(self.Screen)
+        vbox.addWidget(self.statusBar)
 
         self.setLayout(vbox)
         self.setGeometry(300, 300, 500, 250)
@@ -94,15 +94,20 @@ class ScoreDB(QWidget):
         if self.NameEdit.text() != "" and self.AgeEdit.text() != "" and self.ScoreEdit.text() != "" and self.isNumber(self.AgeEdit.text()) and self.isNumber(self.ScoreEdit.text()) and int(self.AgeEdit.text())>=0 and int(self.ScoreEdit.text()) >= 0:
             self.scoredb.append(text)
             self.showScoreDB(self.scoredb)
-        #else statusbar message    
+        elif self.NameEdit.text() == "":
+            self.statusBar.showMessage("The Name Value Error")
+        elif(self.AgeEdit.text() == "" or self.isNumber(self.AgeEdit.text()) or int(self.AgeEdit.text())<0):
+            self.statusBar.showMessage("The Age Value Error")
+        elif (self.ScoreEdit.text() == "" or self.isNumber(self.ScoreEdit.text()) or int(self.ScoreEdit.text())<0):
+            self.statusBar.showMessage("The Score Value Error")
 
     def DelClicked(self):
-        index = 0
-        while(len(self.scoredb)>index):
-            if self.scoredb[index]["Name"] == self.NameEdit.text():
-                del self.scoredb[index]
-                index = 1
-            index += 1
+        i = 0
+        while(len(self.scoredb)>i):
+            if self.scoredb[i]["Name"] == self.NameEdit.text():
+                del self.scoredb[i]
+                i = 1
+            i += 1
         self.showScoreDB(self.scoredb)
 
     def FindClicked(self):
@@ -113,6 +118,8 @@ class ScoreDB(QWidget):
                 if i["Name"]==name:
                     find.append(i)
             self.showScoreDB(find)
+        else:
+            self.statusBar.showMessage("The Name Value Error")
 
     def IncClicked(self):
         name = self.NameEdit.text()
@@ -122,6 +129,10 @@ class ScoreDB(QWidget):
                 if i["Name"] == name:
                     i["Score"] = str(int(i["Score"]) + int(amount))
             self.showScoreDB(self.scoredb)
+        elif(amount == ""):
+            self.statusBar.showMessage("The Amount Value Error")
+        else:
+            self.statusBar.showMessage("The Name Value Error")
 
     def ShowClicked(self):
         key = str(self.KeyCombo.currentText())
@@ -156,7 +167,7 @@ class ScoreDB(QWidget):
     def showScoreDB(self,db):
         text = ""
         for p in db:
-            for attr in p:
+            for attr in sorted(p):
                 text += attr + "=" + p[attr] + '\t'
             text += "\n"
         self.Screen.setText(text)
