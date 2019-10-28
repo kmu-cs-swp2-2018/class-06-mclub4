@@ -92,6 +92,7 @@ class ScoreDB(QWidget):
     def AddClicked(self):
         text = {"Name":self.NameEdit.text(),"Age":self.AgeEdit.text(),"Score":self.ScoreEdit.text()}
         if self.NameEdit.text() != "" and self.AgeEdit.text() != "" and self.ScoreEdit.text() != "" and self.isNumber(self.AgeEdit.text()) and self.isNumber(self.ScoreEdit.text()) and int(self.AgeEdit.text())>=0 and int(self.ScoreEdit.text()) >= 0:
+            self.statusBar.showMessage("")
             self.scoredb.append(text)
             self.showScoreDB(self.scoredb)
         elif self.NameEdit.text() == "":
@@ -114,6 +115,7 @@ class ScoreDB(QWidget):
         name = self.NameEdit.text()
         find = []
         if(self.NameEdit.text() != ""):
+            self.statusBar.showMessage("")
             for i in self.scoredb:
                 if i["Name"]==name:
                     find.append(i)
@@ -125,6 +127,7 @@ class ScoreDB(QWidget):
         name = self.NameEdit.text()
         amount = self.AmountEdit.text()
         if(amount != "" and name != ""):
+            self.statusBar.showMessage("")
             for i in self.scoredb:
                 if i["Name"] == name:
                     i["Score"] = str(int(i["Score"]) + int(amount))
