@@ -40,10 +40,12 @@ class ScoreDB(QWidget):
         Find.clicked.connect(self.FindClicked)
         Inc.clicked.connect(self.IncClicked)
         Show.clicked.connect(self.ShowClicked)
+
         self.KeyCombo = QComboBox()
         self.KeyCombo.addItem("Age")
         self.KeyCombo.addItem("Name")
         self.KeyCombo.addItem("Score")
+
         self.statusBar = QStatusBar()
 
         hbox1 = QHBoxLayout()
@@ -91,7 +93,8 @@ class ScoreDB(QWidget):
 
     def AddClicked(self):
         text = {"Name":self.NameEdit.text(),"Age":self.AgeEdit.text(),"Score":self.ScoreEdit.text()}
-        if self.NameEdit.text() != "" and self.AgeEdit.text() != "" and self.ScoreEdit.text() != "" and self.isNumber(self.AgeEdit.text()) and self.isNumber(self.ScoreEdit.text()) and int(self.AgeEdit.text())>=0 and int(self.ScoreEdit.text()) >= 0:
+        if (self.NameEdit.text() != "" and self.AgeEdit.text() != "" and self.ScoreEdit.text() != "" and self.isNumber(self.AgeEdit.text()) and \
+                self.isNumber(self.ScoreEdit.text()) and int(self.AgeEdit.text())>=0 and int(self.ScoreEdit.text()) >= 0):
             self.statusBar.showMessage("")
             self.scoredb.append(text)
             self.showScoreDB(self.scoredb)
@@ -115,7 +118,10 @@ class ScoreDB(QWidget):
             for i in self.scoredb:
                 if i["Name"]==name:
                     find.append(i)
-            self.showScoreDB(find)
+            if len(find) == 0:
+                self.statusBar.showMessage("Not Found")
+            else:
+                self.showScoreDB(find)
         else:
             self.statusBar.showMessage("The Name Value Error")
 
@@ -170,7 +176,7 @@ class ScoreDB(QWidget):
     def showScoreDB(self,db):
         text = ""
         for p in db:
-            for attr in sorted(p):
+            for attr in p:
                 text += attr + "=" + p[attr] + '\t'
             text += "\n"
         self.Screen.setText(text)
