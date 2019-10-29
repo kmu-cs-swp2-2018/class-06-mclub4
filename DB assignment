@@ -95,12 +95,8 @@ class ScoreDB(QWidget):
             self.statusBar.showMessage("")
             self.scoredb.append(text)
             self.showScoreDB(self.scoredb)
-        elif self.NameEdit.text() == "":
-            self.statusBar.showMessage("The Name Value Error")
-        elif(self.AgeEdit.text() == "" or self.isNumber(self.AgeEdit.text()) or int(self.AgeEdit.text())<0):
-            self.statusBar.showMessage("The Age Value Error")
-        elif (self.ScoreEdit.text() == "" or self.isNumber(self.ScoreEdit.text()) or int(self.ScoreEdit.text())<0):
-            self.statusBar.showMessage("The Score Value Error")
+        else:
+            self.statusBar.showMessage("Something is Wrong!")
 
     def DelClicked(self):
         i = 0
@@ -139,8 +135,12 @@ class ScoreDB(QWidget):
 
     def ShowClicked(self):
         key = str(self.KeyCombo.currentText())
-        self.scoredb.sort(key=lambda person:person[key])
+        self.scoredb.sort(key=lambda person: person[key])
         self.showScoreDB(self.scoredb)
+
+    def keyPressEvent(self, e):
+        if e.key() == Qt.Key_Escape:
+            self.close()
 
     def closeEvent(self, event):
         self.writeScoreDB()
