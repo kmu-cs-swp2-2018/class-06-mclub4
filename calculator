@@ -1,0 +1,134 @@
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import *
+
+class Button(QToolButton):
+
+    def __init__(self, text, callback):
+        super().__init__()
+        self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
+        self.setText(text)
+        self.clicked.connect(callback)
+        
+    def sizeHint(self):
+        size = super(Button, self).sizeHint()
+        size.setHeight(size.height() + 20)
+        size.setWidth(max(size.width(), size.height()))
+        return size
+
+class Calculator(QWidget):
+    def __init__(self):
+        super().__init__()
+
+    # Display Screen
+
+        self.display = QLineEdit()
+        self.display.setReadOnly(True)
+        self.display.setAlignment(Qt.AlignRight)
+        self.display.setMaxLength(15)
+
+    # Digit Button
+
+        self.digitButton = [x for x in range(0, 10)]
+        for i in range(0, 10):
+            self.digitButton[i] = Button(str(i),self.buttonClicked)
+
+    # Other Button
+
+        self.dotbutton = Button('.', self.buttonClicked)
+        self.eqbutton = Button('=', self.buttonClicked)
+        self.addbutton = Button('+', self.buttonClicked)
+        self.mulbutton = Button('*', self.buttonClicked)
+        self.minbutton = Button('-', self.buttonClicked)
+        self.divbutton = Button('/', self.buttonClicked)
+        self.frontbutton = Button('(', self.buttonClicked)
+        self.backbutton = Button(')', self.buttonClicked)
+        self.clearbutton = Button('C', self.buttonClicked)
+        self.allclearbutton = Button('AC', self.buttonClicked)
+
+    # Display Add
+
+        mainLayout = QGridLayout()
+        mainLayout.setSizeConstraint(QLayout.SetFixedSize)
+        mainLayout.addWidget(self.display, 0, 0, 1, 2)
+        numLayout = QGridLayout()
+
+    # DigitButton Add
+
+        k = 0
+        for i in range(3,-1,-1):
+            for j in range(0,3):
+                numLayout.addWidget(self.digitButton[k], i, j)
+                k += 1
+                if(i == 3):
+                    break
+
+    # OtherButton Add
+
+        numLayout.addWidget(self.dotbutton, 3, 1)
+        numLayout.addWidget(self.eqbutton, 3, 2)
+        opLayout = QGridLayout()
+        opLayout.addWidget(self.mulbutton, 0, 0)
+        opLayout.addWidget(self.divbutton, 0, 1)
+        opLayout.addWidget(self.addbutton, 1, 0)
+        opLayout.addWidget(self.minbutton, 1, 1)
+        opLayout.addWidget(self.frontbutton, 2, 0)
+        opLayout.addWidget(self.backbutton, 2, 1)
+        opLayout.addWidget(self.clearbutton, 3, 0)
+        opLayout.addWidget(self.allclearbutton, 3, 1)
+
+    # MainLayout
+
+        mainLayout.addLayout(numLayout, 1, 0)
+        mainLayout.addLayout(opLayout, 1, 1)
+        self.setLayout(mainLayout)
+        self.setWindowTitle("My Calculator")
+
+    #ButtonClicked Event
+    def buttonClicked(self):
+        button = self.sender()
+        key = button.text()
+        text = self.display.text()
+        if key == '=':
+            result = str(eval(text))
+            self.display.setText(result)
+        elif key == 'C':
+            arr = self.display.text()
+            self.display.setText(arr[0:-1])
+        elif key == 'AC':
+            self.display.setText('')
+        else:
+            self.display.setText(text + key)
+            """if(key == '.'):
+                self.display.setText(text + key)
+            elif(text[0] == 0)"""
+
+    # ESC Quit
+    def keyPressEvent(self, e):
+        if e.key() == Qt.Key_Escape:
+            self.close()
+
+    def closeEvent(self, event):
+        close = QMessageBox.question(self, "Quit", "Sure?", QMessageBox.Yes | QMessageBox.No)
+        if close == QMessageBox.Yes:
+            self.closeWindow()
+        else:
+            self.close()
+
+        """
+        close = QMessageBox()
+        close.setText("You sure?")
+        close.setStandardButtons(QMessageBox.Yes | QMessageBox.Cancel)
+        close = close.exec()
+
+        if close == QMessageBox.Yes:
+            event.accept()
+        else:
+            event.ignore()
+        """
+
+if __name__ == '__main__':
+    import sys
+    app = QApplication(sys.argv)
+    calc = Calculator()
+    calc.show()
+    sys.exit(app.exec_())
