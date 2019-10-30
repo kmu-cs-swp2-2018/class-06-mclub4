@@ -1,6 +1,9 @@
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import *
 
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import *
+
 class Button(QToolButton):
 
     def __init__(self, text, callback):
@@ -89,8 +92,14 @@ class Calculator(QWidget):
         key = button.text()
         text = self.display.text()
         if key == '=':
-            result = str(eval(text))
-            self.display.setText(result)
+            try:
+                eval(text)
+            except SyntaxError:
+                self.display.setText("Value Error")
+            else:
+                result = str(eval(text))
+                self.display.setText(result)
+
         elif key == 'C':
             arr = self.display.text()
             self.display.setText(arr[0:-1])
