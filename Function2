@@ -1,0 +1,55 @@
+from fuction import *
+
+def ConstantData(key):
+    if key == constantList[0]:
+        text = str(pi)
+    elif key == constantList[1]:
+        text = '3E+8'
+    elif key == constantList[2]:
+        text = '340'
+    elif key == constantList[3]:
+        text = '1.5E+8'
+    return text
+
+functionMap = [
+    ('factorial (!)', factorial),
+    ('-> binary', decToBin),
+    ('binary -> dec', binToDec),
+    ('-> roman', decToRoman),
+    ('roman -> dec', romanToDec)
+]
+
+functionList = [x[0] for x in functionMap]
+
+otherMap = [
+    ('log', lod),
+    ('v', root),
+    ('x²', pow),
+    ('sin', san),
+    ('cos', cas)
+]
+
+otherList = [x[0] for x in otherMap]
+
+numPadList = [
+    '7', '8', '9',
+    '4', '5', '6',
+    '1', '2', '3',
+    '0', '00', '.',
+    '='
+]
+
+operatorList = [
+    '*', '/','+',
+    '-','(', ')',
+    '%','x²','√',
+    'log','sin','cos',
+    'C', 'AC'
+]
+
+constantList = [
+    'π',
+    '빛의 이동 속도 (m/s)',
+    '소리의 이동 속도 (m/s)',
+    '태양과의 평균 거리 (km)',
+]
