@@ -1,0 +1,111 @@
+from math import sin,log,cos,pi,sqrt
+from math import factorial as fact
+
+def factorial(numStr):
+    try:
+        n = int(numStr)
+        r = str(fact(n))
+    except:
+        r = '연산 오류!'
+    return r
+
+def decToBin(numStr):
+    try:
+        n = int(numStr)
+        r = bin(n)[2:]
+    except:
+        r = '연산 오류!'
+    return r
+
+def binToDec(numStr):
+    try:
+        n = int(numStr, 2)
+        r = str(n)
+    except:
+        r = '연산 오류!'
+    return r
+
+def decToRoman(numStr):
+    try:
+        n = int(numStr)
+    except:
+        return '연산 오류!'
+    if(n >= 4000):
+        return '연산 오류!'
+
+    numList = {
+                 1000: 'M', 900: 'CM', 500: 'D', 400: 'CD',
+                 100: 'C', 90: 'XC', 50: 'L', 40: 'XL',
+                 10: 'X', 9: 'IX', 5: 'V', 4: 'IV',1: 'I'
+            }
+    r = ''
+    for value in sorted(numList.keys(), reverse = True):
+        while n >= value:
+            r += numList[value]
+            n -= value
+    return r
+
+def romanToDec(numstr):
+    try:
+        num = str(numstr)
+    except:
+        return '연산 오류!'
+
+    numList = {
+        1000: 'M', 900: 'CM', 500: 'D', 400: 'CD',
+        100: 'C', 90: 'XC', 50: 'L', 40: 'XL',
+        10: 'X', 9: 'IX', 5: 'V', 4: 'IV', 1: 'I'
+    }
+
+    n = 0
+    while len(num) != 0:
+        for value in sorted(numList.keys(), reverse = True):
+            if num.find(numList[value]) == 0:
+                n += value
+                if(len(str(numList[value])) == 1):
+                    num = num[1:]
+                else:
+                    num = num[2:]
+    return n
+
+
+def root(numstr):
+    try:
+        n = int(numstr)
+        r = str(sqrt(n))
+    except:
+        r = '연산 오류!'
+    return r
+
+def pow(numstr):
+    try:
+        n = int(numstr)
+        r = str(n**2)
+    except:
+        r = '연산 오류!'
+    return r
+
+def lod(numstr):
+    try:
+        n = int(numstr)
+        r = str(log(n))
+    except:
+        r = '연산 오류!'
+    return r
+
+def san(numstr):
+    try:
+        n = int(numstr)
+        r = str(sin(n))
+    except:
+        r = '연산 오류!'
+    return r
+
+def cas(numstr):
+    try:
+        n = int(numstr)
+        r = str(cos(n))
+    except:
+        r = '연산 오류!'
+    return r
+
